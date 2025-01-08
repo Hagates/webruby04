@@ -1,11 +1,95 @@
-<h1>Products</h1>
-<%= link_to "New product", new_product_path if authenticated? %>
-<%= link_to "Login", new_session_path unless authenticated? %>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Products</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
 
-<div id="products">
-  <% @products.each do |product| %>
-    <div>
-      <%= link_to product.name, product %>
+    <%= yield :head %>
+
+    <style>
+      /* Custom styles for products */
+      table {
+        width: 100%;
+        border-collapse: collapse; /* Makes table borders merge */
+        margin-top: 20px;
+      }
+
+      th, td {
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #ddd; /* Light grey border */
+      }
+
+      th {
+        background-color: #f2f2f2; /* Light grey background for headers */
+      }
+
+      td {
+        background-color: #fafafa; /* Slightly lighter background for rows */
+      }
+
+      tr:hover td {
+        background-color: #e2e2e2; /* Darker background when hovering over rows */
+      }
+
+      .button-link {
+        text-decoration: none;
+        color: blue;
+        font-weight: bold;
+      }
+
+      .notice {
+        padding: 10px;
+        background-color: #e2f4e2;
+        margin-bottom: 20px;
+      }
+
+      /* Styling for product images */
+      .product-image {
+        width: 50px;
+        height: 50px;
+        object-fit: cover;
+        border-radius: 5px;
+        margin-right: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="notice"><%= notice %></div>
+
+    <h1>Danh sách sản phẩm</h1>
+
+    <%= link_to "New product", new_product_path, class: 'button-link' if authenticated? %>
+    <%= link_to "Login", new_session_path, class: 'button-link' unless authenticated? %>
+
+    <div id="products">
+      <table>
+        <thead>
+          <tr>
+            <th>Product Image</th>
+            <th>Product Name</th>
+            <th>Quantity</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @products.each do |product| %>
+            <tr>
+              <td>
+                <% if product.featured_image.attached? %>
+                  <%= image_tag product.featured_image, class: "product-image" %>
+                <% else %>
+                  <img src="https://via.placeholder.com/50" alt="No image available" class="product-image" />
+                <% end %>
+              </td>
+              <td><%= link_to product.name, product %></td>
+              <td><%= product.quantity %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
     </div>
-  <% end %>
-</div>
+
+  </body>
+</html>
